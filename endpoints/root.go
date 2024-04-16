@@ -6,6 +6,7 @@ import (
 	"log"
 	"pointsCounterCRUD/database"
 	"pointsCounterCRUD/endpoints/controller"
+	"pointsCounterCRUD/util"
 	"strconv"
 )
 
@@ -35,6 +36,21 @@ func (r *Routs) AddAuthPaths() {
 		// login route
 		authRoutes.POST("/login", controller.Login)
 
+	}
+}
+func (r *Routs) ServeApplication() {
+	adminRoutes := r.r.Group("/admin")
+	{
+		adminRoutes.Use(util.JWTAuth())
+
+		adminRoutes.GET("/users", controller.GetUsers)
+		adminRoutes.GET("/user/:id", controller.GetUser)
+		adminRoutes.PUT("/user/:id", controller.UpdateUser)
+
+		//maybe in future?
+		adminRoutes.POST("/user/role", controller.CreateRole)
+		adminRoutes.GET("/user/roles", controller.GetRoles)
+		adminRoutes.PUT("/user/role/:id", controller.UpdateRole)
 	}
 }
 

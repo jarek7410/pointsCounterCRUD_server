@@ -56,6 +56,7 @@ func serveApplication(repo *database.Repo) {
 	routes := endpoints.NewRouts(repo)
 	routes.AddPaths()
 	routes.AddAuthPaths()
+	routes.ServeApplication()
 
 	routes.Start(2137)
 	fmt.Println("Server running on port 8000")
