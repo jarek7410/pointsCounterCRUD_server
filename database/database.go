@@ -8,11 +8,18 @@ import (
 	"os"
 )
 
-var DB *gorm.DB
+type Repo struct {
+	DB *gorm.DB
+}
 
-func InitDatabase() *gorm.DB {
-	DB = connectDB()
-	return DB
+var Re *Repo
+
+func InitDatabase() *Repo {
+	var db = connectDB()
+	Re = &Repo{
+		DB: db,
+	}
+	return Re
 }
 
 func connectDB() *gorm.DB {
@@ -38,3 +45,12 @@ func connectDB() *gorm.DB {
 	log.Println("`Successfully connected to the database")
 	return db
 }
+
+//
+//func (r Repo) Migrate() error {
+//	err := r.DB.AutoMigrate(&model2.Role{}, &model2.User{})
+//	if err != nil {
+//		return err
+//	}
+//	return nil
+//}

@@ -1,25 +1,21 @@
 package main
 
 import (
+	"fmt"
 	"github.com/joho/godotenv"
 	"log"
 	"os"
 	"pointsCounterCRUD/database"
-	"pointsCounterCRUD/database/model"
 	"pointsCounterCRUD/endpoints"
+	model2 "pointsCounterCRUD/model"
 )
 
 func main() {
 	loadEnv()
 
-	loadDatabase()
+	repo := loadDatabase()
 
-	serveApplication()
-
-	//Repo := dbStats.NewSQLGORMRepository(ctx, db)
-	//if err := Repo.Migrate(); err != nil {
-	//	log.Fatalln(err)
-	//}
+	serveApplication(repo)
 
 }
 
@@ -31,27 +27,36 @@ func loadEnv() {
 	log.Println(".env file loaded successfully")
 }
 
-func loadDatabase() {
-	database.InitDatabase()
-	database.DB.AutoMigrate(&model.Role{})
-	database.DB.AutoMigrate(&model.User{})
-	seedData()
-}
-func seedData() {
-	var roles = []model.Role{{Name: "admin", Description: "Administrator role"},
-		{Name: "customer", Description: "Authenticated customer role"},
-		{Name: "anonymous", Description: "Unauthenticated customer role"}}
-	var user = []model.User{
-		{Username: os.Getenv("ADMIN_USERNAME"),
-			Email:    os.Getenv("ADMIN_EMAIL"),
-			Password: os.Getenv("ADMIN_PASSWORD"), RoleID: 1}}
+func loadDatabase() *database.Repo {
+	r := database.InitDatabase()
+	err := Migrate(r)
+	if err != nil {
+		log.Fatalln("database migration do not work")
+	}
 
-	database.DB.Save(&roles)
-	database.DB.Save(&user)
+	seedData(r)
+
+	return r
+}
+func seedData(r *database.Repo) {
+	var roles = []model2.Role{{Name: "admin", Description: "Administrator role"}, {Name: "customer", Description: "Authenticated customer role"}, {Name: "anonymous", Description: "Unauthenticated customer role"}}
+	var user = []model2.User{{Username: os.Getenv("ADMIN_USERNAME"), Email: os.Getenv("ADMIN_EMAIL"), Password: os.Getenv("ADMIN_PASSWORD"), RoleID: 1}}
+	r.DB.Save(&roles)
+	r.DB.Save(&user)
+}
+func Migrate(r *database.Repo) error {
+	err := r.DB.AutoMigrate(&model2.Role{}, &model2.User{})
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func serveApplication() {
-	routes := endpoints.NewRouts(database.DB)
-	routes.AddPath()
+func serveApplication(repo *database.Repo) {
+	routes := endpoints.NewRouts(repo)
+	routes.AddPaths()
+	routes.AddAuthPaths()
+
 	routes.Start(2137)
+	fmt.Println("Server running on port 8000")
 }

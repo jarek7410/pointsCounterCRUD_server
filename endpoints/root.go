@@ -4,47 +4,46 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"log"
+	"pointsCounterCRUD/database"
+	"pointsCounterCRUD/endpoints/controller"
 	"strconv"
 )
 
 type Routs struct {
-	repo *gorm.DB
+	db   *gorm.DB
 	r    *gin.Engine
+	repo *database.Repo
 }
 
-func NewRouts(repo *gorm.DB) *Routs {
+func NewRouts(repo *database.Repo) *Routs {
 	if repo == nil {
 		//because i can
 		log.Fatalln("Database needed!!")
 	}
 	return &Routs{
 		repo: repo,
+		db:   repo.DB,
 		r:    gin.Default(),
 	}
 }
+func (r *Routs) AddAuthPaths() {
 
-func (r *Routs) AddPath() {
-	//base := NewBasicForRouts(r.repo)
+	authRoutes := r.r.Group("/auth/user")
+	{
+		// registration route
+		authRoutes.POST("/register", controller.Register)
+		// login route
+		authRoutes.POST("/login", controller.Login)
+
+	}
+}
+
+func (r *Routs) AddPaths() {
+	//base := NewBasicForRouts(r.db)
 
 	r.r.GET("/", halfCheck)
 	r.r.GET("/tea", coffee)
 	r.r.GET("/coffee", coffee)
-	//v1 := r.r.Group("/v1")
-	//{
-	//	user := v1.Group("/user")
-	//	{
-	//		user.POST("/", base.postUser)
-	//		user.GET("/:id", base.getUserById)
-	//		user.GET("/", base.getUsers)
-	//	}
-	//	stat := v1.Group("/stat")
-	//	{
-	//		stat.POST("/", base.postStat)
-	//		stat.GET("/user/:id", base.getStats)
-	//		stat.GET("/:id", getStatById)
-	//		stat.DELETE("/:id", deleteStat)
-	//	}
-	//}
 }
 
 func (r *Routs) Start(port int16) {
