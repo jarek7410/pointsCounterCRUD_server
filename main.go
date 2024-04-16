@@ -45,7 +45,7 @@ func seedData(r *database.Repo) {
 	r.DB.Save(&user)
 }
 func Migrate(r *database.Repo) error {
-	err := r.DB.AutoMigrate(&model2.Role{}, &model2.User{})
+	err := r.DB.AutoMigrate(&model2.Role{}, &model2.User{}, &model2.Stat{}, &model2.Room{})
 	if err != nil {
 		return err
 	}

@@ -50,8 +50,26 @@ func (r *Routs) ServeApplication() {
 		//maybe in future?
 		adminRoutes.POST("/user/role", controller.CreateRole)
 		adminRoutes.GET("/user/roles", controller.GetRoles)
+		adminRoutes.GET("/user/role/:id", controller.GetRole)
 		adminRoutes.PUT("/user/role/:id", controller.UpdateRole)
 	}
+
+	publicRoutes := r.r.Group("/api/view")
+	{
+		publicRoutes.GET("/rooms", controller.GetRooms)
+		publicRoutes.GET("/room/:id", controller.GetRoom)
+		publicRoutes.GET("/room/:id/stats", controller.GetStatsByRoom)
+	}
+
+	protectedRoutes := r.r.Group("/api")
+	{
+		protectedRoutes.Use(util.JWTAuthCustomer())
+		protectedRoutes.POST("/room/", controller.CreateRoom)
+		protectedRoutes.PUT("/room/:id", controller.UpdateRoom)
+		protectedRoutes.POST("/stat/", controller.CreateStat)
+		protectedRoutes.GET("/stats/", controller.GetStatsByUser)
+	}
+
 }
 
 func (r *Routs) AddPaths() {
