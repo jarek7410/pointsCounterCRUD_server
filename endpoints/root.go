@@ -8,7 +8,7 @@ import (
 )
 
 type Routs struct {
-	repo *dbStats.Repo
+	repo *gorm.DB
 	r    *gin.Engine
 }
 
@@ -29,22 +29,22 @@ func (r *Routs) AddPath() {
 	r.r.GET("/", halfCheck)
 	r.r.GET("/tea", coffee)
 	r.r.GET("/coffee", coffee)
-	v1 := r.r.Group("/v1")
-	{
-		user := v1.Group("/user")
-		{
-			user.POST("/", base.postUser)
-			user.GET("/:id", base.getUserById)
-			user.GET("/", base.getUsers)
-		}
-		stat := v1.Group("/stat")
-		{
-			stat.POST("/", base.postStat)
-			stat.GET("/user/:id", base.getStats)
-			stat.GET("/:id", getStatById)
-			stat.DELETE("/:id", deleteStat)
-		}
-	}
+	//v1 := r.r.Group("/v1")
+	//{
+	//	user := v1.Group("/user")
+	//	{
+	//		user.POST("/", base.postUser)
+	//		user.GET("/:id", base.getUserById)
+	//		user.GET("/", base.getUsers)
+	//	}
+	//	stat := v1.Group("/stat")
+	//	{
+	//		stat.POST("/", base.postStat)
+	//		stat.GET("/user/:id", base.getStats)
+	//		stat.GET("/:id", getStatById)
+	//		stat.DELETE("/:id", deleteStat)
+	//	}
+	//}
 }
 
 func (r *Routs) Start(port int16) {

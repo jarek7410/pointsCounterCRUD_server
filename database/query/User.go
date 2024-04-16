@@ -1,14 +1,17 @@
-package database
+package query
 
 import (
+	"github.com/jarek7410/pointsCounterCRUD_server/tree/master/database/model"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
+	"html"
+	"pointsCounterCRUD/database"
 	"strings"
 )
 
 // Save user details
 func (user *User) Save() (*User, error) {
-	err := Db.Create(&user).Error
+	err := database.DB.Create(&user).Error
 	if err != nil {
 		return &User{}, err
 	}
@@ -28,7 +31,7 @@ func (user *User) BeforeSave(*gorm.DB) error {
 
 // Get all users
 func GetUsers(User *[]User) (err error) {
-	err = Db.Find(User).Error
+	err = database.DB.Find(User).Error
 	if err != nil {
 		return err
 	}
@@ -38,7 +41,7 @@ func GetUsers(User *[]User) (err error) {
 // Get user by username
 func GetUserByUsername(username string) (User, error) {
 	var user User
-	err := Db.Where("username=?", username).Find(&user).Error
+	err := database.DB.Where("username=?", username).Find(&user).Error
 	if err != nil {
 		return User{}, err
 	}
@@ -53,7 +56,7 @@ func (user *User) ValidateUserPassword(password string) error {
 // Get user by id
 func GetUserById(id uint) (User, error) {
 	var user User
-	err := Db.Where("id=?", id).Find(&user).Error
+	err := database.DB.Where("id=?", id).Find(&user).Error
 	if err != nil {
 		return User{}, err
 	}
@@ -62,7 +65,7 @@ func GetUserById(id uint) (User, error) {
 
 // Get user by id
 func GetUser(User *User, id int) (err error) {
-	err = Db.Where("id = ?", id).First(User).Error
+	err = database.DB.Where("id = ?", id).First(User).Error
 	if err != nil {
 		return err
 	}
@@ -71,7 +74,7 @@ func GetUser(User *User, id int) (err error) {
 
 // Update user
 func UpdateUser(User *User) (err error) {
-	err = Db.Omit("password").Updates(User).Error
+	err = database.DB.Omit("password").Updates(User).Error
 	if err != nil {
 		return err
 	}

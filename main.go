@@ -3,7 +3,9 @@ package main
 import (
 	"github.com/joho/godotenv"
 	"log"
+	"os"
 	"pointsCounterCRUD/database"
+	"pointsCounterCRUD/database/model"
 	"pointsCounterCRUD/endpoints"
 )
 
@@ -31,6 +33,21 @@ func loadEnv() {
 
 func loadDatabase() {
 	database.InitDatabase()
+	database.DB.AutoMigrate(&model.Role{})
+	database.DB.AutoMigrate(&model.User{})
+	seedData()
+}
+func seedData() {
+	var roles = []model.Role{{Name: "admin", Description: "Administrator role"},
+		{Name: "customer", Description: "Authenticated customer role"},
+		{Name: "anonymous", Description: "Unauthenticated customer role"}}
+	var user = []model.User{
+		{Username: os.Getenv("ADMIN_USERNAME"),
+			Email:    os.Getenv("ADMIN_EMAIL"),
+			Password: os.Getenv("ADMIN_PASSWORD"), RoleID: 1}}
+
+	database.DB.Save(&roles)
+	database.DB.Save(&user)
 }
 
 func serveApplication() {
