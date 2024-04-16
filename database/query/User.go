@@ -1,11 +1,11 @@
 package query
 
 import (
-	"github.com/jarek7410/pointsCounterCRUD_server/tree/master/database/model"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 	"html"
 	"pointsCounterCRUD/database"
+	. "pointsCounterCRUD/database/model"
 	"strings"
 )
 
@@ -29,6 +29,11 @@ func (user *User) BeforeSave(*gorm.DB) error {
 	return nil
 }
 
+// Validate user password
+func (user *User) ValidateUserPassword(password string) error {
+	return bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+}
+
 // Get all users
 func GetUsers(User *[]User) (err error) {
 	err = database.DB.Find(User).Error
@@ -46,11 +51,6 @@ func GetUserByUsername(username string) (User, error) {
 		return User{}, err
 	}
 	return user, nil
-}
-
-// Validate user password
-func (user *User) ValidateUserPassword(password string) error {
-	return bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 }
 
 // Get user by id

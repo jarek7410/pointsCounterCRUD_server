@@ -2,6 +2,7 @@ package query
 
 import (
 	"pointsCounterCRUD/database"
+	. "pointsCounterCRUD/database/model"
 )
 
 // Create a role
