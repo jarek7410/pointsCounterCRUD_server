@@ -1,7 +1,7 @@
-package model
+package dto
 
-type Register struct {
+type Update struct {
 	Username string `json:"username" binding:"required"`
 	Email    string `json:"email" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	RoleID   uint   `gorm:"not null" json:"role_id"`
 }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	model2 "pointsCounterCRUD/model"
+	"pointsCounterCRUD/model/dto"
 	"pointsCounterCRUD/util"
 	"strconv"
 
@@ -15,7 +16,7 @@ import (
 
 // Register user
 func Register(context *gin.Context) {
-	var input model2.Register
+	var input dto.Register
 
 	if err := context.ShouldBindJSON(&input); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -42,7 +43,7 @@ func Register(context *gin.Context) {
 
 // User Login
 func Login(context *gin.Context) {
-	var input model2.Login
+	var input dto.Login
 
 	if err := context.ShouldBindJSON(&input); err != nil {
 		var errorMessage string
