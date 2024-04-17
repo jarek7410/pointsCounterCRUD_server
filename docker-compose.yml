@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  app_points:
+    depends_on:
+      - "postgres"
+    image: app
+    restart: unless-stopped
+    ports:
+      - 3000:2137
+    networks:
+      pos_net
+  postgres:
+    image: postgres:latest7
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=points_scoring
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+
+
