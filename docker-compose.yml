@@ -8,8 +8,6 @@ services:
     restart: unless-stopped
     ports:
       - 3000:2137
-    networks:
-      pos_net
   postgres:
     image: postgres:latest7
     restart: unless-stopped
