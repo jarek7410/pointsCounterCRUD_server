@@ -2,11 +2,11 @@ package controller
 
 import (
 	"errors"
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"pointsCounterCRUD/model"
 	"strconv"
 
-	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 

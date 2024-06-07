@@ -70,6 +70,20 @@ func ValidateCustomerRoleJWT(context *gin.Context) error {
 	return errors.New("invalid author token provided")
 }
 
+// validate Customer role
+func ValidateAnonymousRoleJWT(context *gin.Context) error {
+	token, err := getToken(context)
+	if err != nil {
+		return err
+	}
+	claims, ok := token.Claims.(jwt.MapClaims)
+	userRole := uint(claims["role"].(float64))
+	if ok && token.Valid && userRole == 3 || userRole == 2 || userRole == 1 {
+		return nil
+	}
+	return errors.New("invalid author token provided")
+}
+
 // fetch user details from the token
 func CurrentUser(context *gin.Context) model.User {
 	err := ValidateJWT(context)

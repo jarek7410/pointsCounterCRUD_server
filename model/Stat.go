@@ -36,7 +36,7 @@ func (stat *Stat) Save() (*Stat, error) {
 	}
 	return stat, nil
 }
-func (stat *Stat) Erace() (*Stat, error) {
+func (stat *Stat) Erase() (*Stat, error) {
 	err := database.Re.DB.Delete(&stat).Error
 	if err != nil {
 		return stat, err

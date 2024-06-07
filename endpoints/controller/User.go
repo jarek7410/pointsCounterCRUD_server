@@ -92,6 +92,23 @@ func GetUsers(context *gin.Context) {
 	context.JSON(http.StatusOK, user)
 }
 
+// get all users
+func GetUsersPublic(context *gin.Context) {
+
+	var user []model2.User
+	err := model2.GetUsers(&user)
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+	var userPublic []string
+	for _, u := range user {
+		userPublic = append(userPublic, u.Username)
+	}
+
+	context.JSON(http.StatusOK, userPublic)
+}
+
 // get user by id
 func GetUser(context *gin.Context) {
 	id, _ := strconv.Atoi(context.Param("id"))
@@ -107,6 +124,17 @@ func GetUser(context *gin.Context) {
 		return
 	}
 	context.JSON(http.StatusOK, user)
+}
+func GetMyUser(ctx *gin.Context) {
+	//log.Println("przynajmniej działa?")
+	user := util.CurrentUser(ctx)
+	userMe := dto.UserDataMe{
+		ID:       user.ID,
+		Username: user.Username,
+		Email:    user.Email,
+	}
+
+	ctx.JSON(http.StatusOK, userMe)
 }
 
 // update user

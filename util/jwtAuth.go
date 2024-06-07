@@ -36,6 +36,25 @@ func JWTAuthCustomer() gin.HandlerFunc {
 		}
 		error := ValidateCustomerRoleJWT(context)
 		if error != nil {
+			context.JSON(http.StatusUnauthorized, gin.H{"error": "Only pay Customers are allowed to perform this action"})
+			context.Abort()
+			return
+		}
+		context.Next()
+	}
+}
+
+// check for valid Anonymous token
+func JWTAuthAnonymous() gin.HandlerFunc {
+	return func(context *gin.Context) {
+		err := ValidateJWT(context)
+		if err != nil {
+			context.JSON(http.StatusUnauthorized, gin.H{"error": "Authentication required"})
+			context.Abort()
+			return
+		}
+		error := ValidateAnonymousRoleJWT(context)
+		if error != nil {
 			context.JSON(http.StatusUnauthorized, gin.H{"error": "Only registered Customers are allowed to perform this action"})
 			context.Abort()
 			return

@@ -59,15 +59,20 @@ func (r *Routs) ServeApplication() {
 		publicRoutes.GET("/rooms", controller.GetRooms)
 		publicRoutes.GET("/room/:id", controller.GetRoom)
 		publicRoutes.GET("/room/:id/stats", controller.GetStatsByRoom)
+		publicRoutes.GET("/users", controller.GetUsersPublic)
 	}
 
 	protectedRoutes := r.r.Group("/api")
 	{
-		protectedRoutes.Use(util.JWTAuthCustomer())
+		protectedRoutes.Use(util.JWTAuthAnonymous())
 		protectedRoutes.POST("/room/", controller.CreateRoom)
 		protectedRoutes.PUT("/room/:id", controller.UpdateRoom)
 		protectedRoutes.POST("/stat/", controller.CreateStat)
 		protectedRoutes.GET("/stats/", controller.GetStatsByUser)
+
+		protectedRoutes.GET("/users", controller.GetUsers)
+		protectedRoutes.GET("/user/:id", controller.GetUser)
+		protectedRoutes.GET("/me", controller.GetMyUser)
 	}
 
 }
