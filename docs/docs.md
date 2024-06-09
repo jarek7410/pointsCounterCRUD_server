@@ -151,3 +151,22 @@ array[string]
 
 [//]: # (TODO)
 </details>
+
+### post stat
+
+<details>
+<summary><code>POST</code><code><b>/api/stat/</b></code><code>post stat to the room</code></summary>
+
+##### Params
+
+| name |type | datatype | description|
+|------|----|---------|-----------|
+| Value| requred| number| score, point ect|
+|Comment| optional|string| some type of comment|
+
+##### Respoinse 
+
+[//]: # (TODO)
+
+
+</details>

@@ -13,6 +13,7 @@ import (
 func CreateStat(c *gin.Context) {
 	var input model.Stat
 	var user_id = util.CurrentUser(c).ID
+	var comment = input.Comment
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -20,6 +21,7 @@ func CreateStat(c *gin.Context) {
 	}
 	if input.UserID != 0 {
 		user_id = input.RoomID
+		comment = comment + "\nuser error: used room id instead\n"
 	}
 	booking := model.Stat{
 		Value:   input.Value,
