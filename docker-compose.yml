@@ -9,7 +9,7 @@ services:
     ports:
       - 3000:2137
   postgres:
-    image: postgres:latest7
+    image: postgres:latest
     restart: unless-stopped
     environment:
       - POSTGRES_DB=points_scoring
